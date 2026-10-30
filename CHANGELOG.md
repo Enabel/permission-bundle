@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.1](https://github.com/Enabel/permission-bundle/tree/v1.0.1) (2026-10-30)
+
+[Full Changelog](https://github.com/Enabel/permission-bundle/compare/v1.0.0...v1.0.1)
+
+**Fixed bugs:**
+
+- The permission matrix rendered one table per domain, each sizing its own columns: a role's column moved from one domain to the next. It is now one table, so a column keeps its role from the first domain to the last; each domain opens with its name and the roles, and every other role column is shaded. **Markup change** for applications that override `@EnabelPermission/matrix.html.twig`: one `<table>` without `<thead>`, a `<tbody data-domain>` per domain whose first row holds the roles.
+
 ## [v1.0.0](https://github.com/Enabel/permission-bundle/tree/v1.0.0) (2026-10-30)
 
 **Implemented enhancements:**

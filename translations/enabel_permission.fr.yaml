@@ -1,4 +1,5 @@
 matrix:
+    # No longer rendered by the bundle template; kept for the templates overriding it.
     permission: Permission
     relations: Aussi accordée par
     granted: Accordée

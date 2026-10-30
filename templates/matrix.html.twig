@@ -1,5 +1,6 @@
 {#-
-    The permission matrix, one table per domain.
+    The permission matrix: one table, so a role keeps the same column from the
+    first domain to the last. Each domain opens with its name and the roles.
 
         {% include '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
 
@@ -7,29 +8,30 @@
     the permissions, embed it and override `permission_label` (`row` is a MatrixRow).
 -#}
 {% set roles = matrix.roles %}
-{% for domain, rows in matrix.domains %}
-    <section class="enabel-permission-matrix mb-4" data-domain="{{ domain }}">
-        <h2 class="h5">{{ domain }}</h2>
-        <div class="table-responsive">
-            <table class="table table-sm table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th scope="col">{{ 'matrix.permission' | trans({}, 'enabel_permission') }}</th>
+{% set domains = matrix.domains %}
+{% if domains is empty %}
+    <p class="text-body-secondary">{{ 'matrix.empty' | trans({}, 'enabel_permission') }}</p>
+{% else %}
+    <div class="table-responsive enabel-permission-matrix">
+        <table class="table table-sm table-hover align-middle mb-0">
+            {% for domain, rows in domains %}
+                <tbody data-domain="{{ domain }}">
+                    <tr class="table-light">
+                        <th scope="rowgroup" class="fw-semibold">{{ domain }}</th>
                         {% for role in roles %}
-                            <th scope="col" class="text-center"><code>{{ role }}</code></th>
+                            {#- Every other role column is shaded on its cells (table-active): Bootstrap paints cells above a <col> background. -#}
+                            <th scope="col" class="text-center small{% if loop.index is odd %} table-active{% endif %}"><code>{{ role }}</code></th>
                         {% endfor %}
-                        <th scope="col">{{ 'matrix.relations' | trans({}, 'enabel_permission') }}</th>
+                        <th scope="col" class="small">{{ 'matrix.relations' | trans({}, 'enabel_permission') }}</th>
                     </tr>
-                </thead>
-                <tbody>
                     {% for row in rows %}
                         <tr data-permission="{{ row.value }}">
                             <th scope="row" class="fw-normal">
                                 {% block permission_label %}{{ row.name }}{% endblock %}<br>
-                                <code>{{ row.value }}</code>
+                                <code class="small">{{ row.value }}</code>
                             </th>
                             {% for role in roles %}
-                                <td class="text-center" data-role="{{ role }}">
+                                <td class="text-center{% if loop.index is odd %} table-active{% endif %}" data-role="{{ role }}">
                                     {%- if row.roles[role] -%}
                                         <span aria-hidden="true">&#10003;</span>
                                         <span class="visually-hidden">{{ 'matrix.granted' | trans({}, 'enabel_permission') }}</span>
@@ -47,10 +49,8 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>
-        </div>
-    </section>
-{% else %}
-    <p class="text-body-secondary">{{ 'matrix.empty' | trans({}, 'enabel_permission') }}</p>
-{% endfor %}
-<p class="small text-body-secondary">{{ 'matrix.inheritance' | trans({}, 'enabel_permission') }}</p>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+<p class="small text-body-secondary mt-2">{{ 'matrix.inheritance' | trans({}, 'enabel_permission') }}</p>

@@ -26,6 +26,8 @@
         "ergebnis/composer-normalize": "^2.48",
         "phpunit/phpunit": "^13.0",
         "symfony/console": "^8.0",
+        "symfony/css-selector": "^8.0",
+        "symfony/dom-crawler": "^8.0",
         "symfony/framework-bundle": "^8.0",
         "symfony/phpunit-bridge": "^8.0",
         "symfony/security-bundle": "^8.0",

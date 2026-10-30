@@ -18,6 +18,7 @@ use Enabel\Permission\Tests\Fixtures\Permissions\NewsPermissions;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -89,8 +90,23 @@ class EnabelPermissionBundleTest extends KernelTestCase
 
         $html = $twig->render('@EnabelPermission/matrix.html.twig', ['matrix' => $matrix]);
 
-        $this->assertStringContainsString('data-domain="News"', $html);
-        $this->assertStringContainsString('<code>NEWS_COMMENT</code>', $html);
+        $crawler = new Crawler($html);
+        // One table: a role keeps its column from one domain to the next.
+        $this->assertCount(1, $crawler->filter('table'));
+        $this->assertSame(['User', 'News'], $crawler->filter('tbody')->extract(['data-domain']));
+        // Each domain opens with its name and the roles, in the same columns.
+        $columns = \count($matrix->roles()) + 2;
+        $crawler->filter('tbody')->each(function (Crawler $domain) use ($matrix, $columns): void {
+            $header = $domain->filter('tr')->first()->filter('th');
+            $this->assertCount($columns, $header);
+            $this->assertSame($matrix->roles(), \array_slice($header->each(static fn (Crawler $th) => $th->text()), 1, -1));
+        });
+        $crawler->filter('tr[data-permission]')->each(fn (Crawler $row) => $this->assertCount($columns, $row->filter('th, td')));
+        // Every other role column is shaded on its cells.
+        $first = $crawler->filter('tr[data-permission]')->first()->filter('td[data-role]');
+        $this->assertStringContainsString('table-active', (string) $first->eq(0)->attr('class'));
+        $this->assertStringNotContainsString('table-active', (string) $first->eq(1)->attr('class'));
+        $this->assertStringContainsString('<code class="small">NEWS_COMMENT</code>', $html);
         $this->assertMatchesRegularExpression('#data-role="ROLE_EMPLOYEE"><span aria-hidden="true">&\#10003;</span>#', $html);
         $this->assertStringContainsString('Also granted by', $html);
         $this->assertStringContainsString('>creator<', $html);
