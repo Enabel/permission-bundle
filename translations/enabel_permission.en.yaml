@@ -1,5 +1,4 @@
 matrix:
-    permission: Permission
     relations: Also granted by
     granted: Granted
     empty: No permission is declared.

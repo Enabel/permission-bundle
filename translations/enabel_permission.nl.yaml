@@ -1,5 +1,4 @@
 matrix:
-    permission: Recht
     relations: Ook toegekend via
     granted: Toegekend
     empty: Er zijn geen rechten gedeclareerd.
