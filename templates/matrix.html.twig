@@ -1,6 +1,7 @@
 {#-
     The permission matrix: one table, so a role keeps the same column from the
-    first domain to the last; each domain is a group of rows under its name.
+    first domain to the last. Each domain opens with its name and the roles, so
+    the role of a column stays in sight however long the matrix is.
 
         {% include '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
 
@@ -14,27 +15,15 @@
 {% else %}
     <div class="table-responsive enabel-permission-matrix">
         <table class="table table-sm table-hover align-middle mb-0">
-            {#- Every other role column is shaded, to follow a column down the table. -#}
-            <colgroup>
-                <col>
-                {% for role in roles %}
-                    <col{% if loop.index is odd %} class="bg-body-tertiary"{% endif %}>
-                {% endfor %}
-                <col>
-            </colgroup>
-            <thead class="sticky-top bg-body">
-                <tr>
-                    <th scope="col">{{ 'matrix.permission' | trans({}, 'enabel_permission') }}</th>
-                    {% for role in roles %}
-                        <th scope="col" class="text-center small"><code>{{ role }}</code></th>
-                    {% endfor %}
-                    <th scope="col">{{ 'matrix.relations' | trans({}, 'enabel_permission') }}</th>
-                </tr>
-            </thead>
             {% for domain, rows in domains %}
                 <tbody data-domain="{{ domain }}">
                     <tr class="table-light">
-                        <th scope="rowgroup" colspan="{{ roles | length + 2 }}" class="fw-semibold">{{ domain }}</th>
+                        <th scope="rowgroup" class="fw-semibold">{{ domain }}</th>
+                        {% for role in roles %}
+                            {#- Every other role column is shaded on its cells (table-active): Bootstrap paints cells above a <col> background. -#}
+                            <th scope="col" class="text-center small{% if loop.index is odd %} table-active{% endif %}"><code>{{ role }}</code></th>
+                        {% endfor %}
+                        <th scope="col" class="small">{{ 'matrix.relations' | trans({}, 'enabel_permission') }}</th>
                     </tr>
                     {% for row in rows %}
                         <tr data-permission="{{ row.value }}">
@@ -43,7 +32,7 @@
                                 <code class="small">{{ row.value }}</code>
                             </th>
                             {% for role in roles %}
-                                <td class="text-center" data-role="{{ role }}">
+                                <td class="text-center{% if loop.index is odd %} table-active{% endif %}" data-role="{{ role }}">
                                     {%- if row.roles[role] -%}
                                         <span aria-hidden="true">&#10003;</span>
                                         <span class="visually-hidden">{{ 'matrix.granted' | trans({}, 'enabel_permission') }}</span>

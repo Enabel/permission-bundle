@@ -93,11 +93,19 @@ class EnabelPermissionBundleTest extends KernelTestCase
         $crawler = new Crawler($html);
         // One table: a role keeps its column from one domain to the next.
         $this->assertCount(1, $crawler->filter('table'));
-        $this->assertCount(1, $crawler->filter('thead'));
         $this->assertSame(['User', 'News'], $crawler->filter('tbody')->extract(['data-domain']));
+        // Each domain opens with its name and the roles, in the same columns.
         $columns = \count($matrix->roles()) + 2;
-        $this->assertCount($columns, $crawler->filter('thead th'));
+        $crawler->filter('tbody')->each(function (Crawler $domain) use ($matrix, $columns): void {
+            $header = $domain->filter('tr')->first()->filter('th');
+            $this->assertCount($columns, $header);
+            $this->assertSame($matrix->roles(), \array_slice($header->each(static fn (Crawler $th) => $th->text()), 1, -1));
+        });
         $crawler->filter('tr[data-permission]')->each(fn (Crawler $row) => $this->assertCount($columns, $row->filter('th, td')));
+        // Every other role column is shaded on its cells.
+        $first = $crawler->filter('tr[data-permission]')->first()->filter('td[data-role]');
+        $this->assertStringContainsString('table-active', (string) $first->eq(0)->attr('class'));
+        $this->assertStringNotContainsString('table-active', (string) $first->eq(1)->attr('class'));
         $this->assertStringContainsString('<code class="small">NEWS_COMMENT</code>', $html);
         $this->assertMatchesRegularExpression('#data-role="ROLE_EMPLOYEE"><span aria-hidden="true">&\#10003;</span>#', $html);
         $this->assertStringContainsString('Also granted by', $html);
