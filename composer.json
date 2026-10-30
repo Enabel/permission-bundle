@@ -1,0 +1,72 @@
+{
+    "name": "enabel/permission-bundle",
+    "description": "Permission enums for Symfony: roles, relations and rules declared on each case, one voter, a permission matrix",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony",
+        "security",
+        "permissions",
+        "voter"
+    ],
+    "authors": [
+        {
+            "name": "Damien LAGAE",
+            "email": "damien.lagae@enabel.be"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^8.0",
+        "symfony/dependency-injection": "^8.0",
+        "symfony/http-kernel": "^8.0",
+        "symfony/security-core": "^8.0"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.48",
+        "phpunit/phpunit": "^13.0",
+        "symfony/console": "^8.0",
+        "symfony/framework-bundle": "^8.0",
+        "symfony/phpunit-bridge": "^8.0",
+        "symfony/security-bundle": "^8.0",
+        "symfony/translation": "^8.0",
+        "symfony/twig-bundle": "^8.0",
+        "symfony/yaml": "^8.0"
+    },
+    "suggest": {
+        "symfony/console": "Required by the debug:permission command",
+        "symfony/twig-bundle": "Required to render the permission matrix with @EnabelPermission/matrix.html.twig"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Enabel\\Permission\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Enabel\\Permission\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "tools:run": [
+            "@tools:run:php-cs-fixer",
+            "@tools:run:phpstan"
+        ],
+        "tools:run:php-cs-fixer": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix",
+        "tools:run:phpstan": "tools/phpstan/vendor/bin/phpstan --memory-limit=1G",
+        "tools:upgrade": [
+            "@tools:upgrade:php-cs-fixer",
+            "@tools:upgrade:phpstan"
+        ],
+        "tools:upgrade:php-cs-fixer": "composer upgrade -W -d tools/php-cs-fixer",
+        "tools:upgrade:phpstan": "composer upgrade -W -d tools/phpstan"
+    }
+}

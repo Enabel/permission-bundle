@@ -1,0 +1,6 @@
+matrix:
+    permission: Permission
+    relations: Also granted by
+    granted: Granted
+    empty: No permission is declared.
+    inheritance: A role is granted what the roles it inherits are granted. Relations grant a permission for the subjects they hold on (e.g. the creator of a record).

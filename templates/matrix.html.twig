@@ -1,0 +1,56 @@
+{#-
+    The permission matrix, one table per domain.
+
+        {% include '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
+
+    `matrix` is the Enabel\Permission\Matrix\PermissionMatrix service. To label
+    the permissions, embed it and override `permission_label` (`row` is a MatrixRow).
+-#}
+{% set roles = matrix.roles %}
+{% for domain, rows in matrix.domains %}
+    <section class="enabel-permission-matrix mb-4" data-domain="{{ domain }}">
+        <h2 class="h5">{{ domain }}</h2>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'matrix.permission' | trans({}, 'enabel_permission') }}</th>
+                        {% for role in roles %}
+                            <th scope="col" class="text-center"><code>{{ role }}</code></th>
+                        {% endfor %}
+                        <th scope="col">{{ 'matrix.relations' | trans({}, 'enabel_permission') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr data-permission="{{ row.value }}">
+                            <th scope="row" class="fw-normal">
+                                {% block permission_label %}{{ row.name }}{% endblock %}<br>
+                                <code>{{ row.value }}</code>
+                            </th>
+                            {% for role in roles %}
+                                <td class="text-center" data-role="{{ role }}">
+                                    {%- if row.roles[role] -%}
+                                        <span aria-hidden="true">&#10003;</span>
+                                        <span class="visually-hidden">{{ 'matrix.granted' | trans({}, 'enabel_permission') }}</span>
+                                    {%- endif -%}
+                                </td>
+                            {% endfor %}
+                            <td>
+                                {#- The app may label its relations under relation.<name> in the enabel_permission domain. -#}
+                                {% for relation in row.relations %}
+                                    {% set key = 'relation.' ~ relation %}
+                                    {% set label = key | trans({}, 'enabel_permission') %}
+                                    <span class="badge text-bg-light">{{ label == key ? relation : label }}</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% else %}
+    <p class="text-body-secondary">{{ 'matrix.empty' | trans({}, 'enabel_permission') }}</p>
+{% endfor %}
+<p class="small text-body-secondary">{{ 'matrix.inheritance' | trans({}, 'enabel_permission') }}</p>

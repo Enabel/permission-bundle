@@ -1,0 +1,6 @@
+matrix:
+    permission: Permission
+    relations: Aussi accordée par
+    granted: Accordée
+    empty: Aucune permission n'est déclarée.
+    inheritance: Un rôle reçoit ce qui est accordé aux rôles dont il hérite. Les relations accordent une permission sur les éléments concernés (par exemple au créateur d'un enregistrement).
