@@ -1,4 +1,6 @@
 matrix:
+    # No longer rendered by the bundle template; kept for the templates overriding it.
+    permission: Recht
     relations: Ook toegekend via
     granted: Toegekend
     empty: Er zijn geen rechten gedeclareerd.
