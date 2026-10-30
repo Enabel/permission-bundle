@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [v1.0.0](https://github.com/Enabel/permission-bundle/tree/v1.0.0) (2026-10-30)
 
 **Implemented enhancements:**
 
