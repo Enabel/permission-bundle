@@ -1,7 +1,7 @@
 matrix:
+    caption: Rechten toegekend aan elke rol
     # No longer rendered by the bundle template; kept for the templates overriding it.
     permission: Recht
-    caption: Rechten toegekend aan elke rol
     relations: Ook toegekend via
     granted: Toegekend
     not_granted: Niet toegekend

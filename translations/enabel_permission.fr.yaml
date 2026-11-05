@@ -1,7 +1,7 @@
 matrix:
+    caption: Permissions accordées à chaque rôle
     # No longer rendered by the bundle template; kept for the templates overriding it.
     permission: Permission
-    caption: Permissions accordées à chaque rôle
     relations: Aussi accordée par
     granted: Accordée
     not_granted: Non accordée

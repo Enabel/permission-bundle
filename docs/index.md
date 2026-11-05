@@ -188,7 +188,9 @@ final class PermissionsController extends AbstractController
 ```
 
 For screen readers the table carries a visually hidden caption (`matrix.caption` by default), and
-every role cell says whether the role is granted, the empty ones included.
+every role cell says whether the role is granted, the empty ones included. The caption relies on
+Bootstrap 5.3 or later: before it, `.visually-hidden` also positioned captions out of the table,
+which can drop the table's accessible name.
 
 The template uses Bootstrap classes and the `enabel_permission` translation domain (en, fr, nl).
 Relations are labelled with `relation.<name>` in that domain when the application translates
