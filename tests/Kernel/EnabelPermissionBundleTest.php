@@ -112,6 +112,41 @@ class EnabelPermissionBundleTest extends KernelTestCase
         $this->assertStringContainsString('>creator<', $html);
     }
 
+    public function testMatrixTemplateNamesTheTableAndEveryCellForScreenReaders(): void
+    {
+        self::bootKernel();
+
+        /** @var Environment $twig */
+        $twig = static::getContainer()->get('twig');
+        $crawler = new Crawler($twig->render('@EnabelPermission/matrix.html.twig', [
+            'matrix' => static::getContainer()->get('test.permission_matrix'),
+        ]));
+
+        // The caption is the table's first child, so it gives the table its accessible name.
+        $this->assertSame('Permissions granted to each role', $crawler->filter('table > caption.visually-hidden')->text());
+        $this->assertSame('caption', $crawler->filter('table')->children()->first()->nodeName());
+        // A role cell is never read empty: it says whether the role is granted.
+        $said = $crawler->filter('td[data-role]')->each(static fn (Crawler $td): string => $td->filter('.visually-hidden')->text(''));
+        $this->assertSame([], array_values(array_diff($said, ['Granted', 'Not granted'])));
+        $this->assertContains('Granted', $said);
+        $this->assertContains('Not granted', $said);
+    }
+
+    public function testMatrixCaptionCanBeOverridden(): void
+    {
+        self::bootKernel();
+
+        /** @var Environment $twig */
+        $twig = static::getContainer()->get('twig');
+        $html = $twig->createTemplate(<<<'TWIG'
+            {% embed '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
+                {% block caption %}Who may do what{% endblock %}
+            {% endembed %}
+            TWIG)->render(['matrix' => static::getContainer()->get('test.permission_matrix')]);
+
+        $this->assertSame('Who may do what', (new Crawler($html))->filter('table > caption')->text());
+    }
+
     public function testDebugCommandListsTheGrants(): void
     {
         $tester = new CommandTester((new Application(self::bootKernel()))->find('debug:permission'));

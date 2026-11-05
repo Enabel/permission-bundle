@@ -1,7 +1,9 @@
 matrix:
+    caption: Permissions accordées à chaque rôle
     # No longer rendered by the bundle template; kept for the templates overriding it.
     permission: Permission
     relations: Aussi accordée par
     granted: Accordée
+    not_granted: Non accordée
     empty: Aucune permission n'est déclarée.
     inheritance: Un rôle reçoit ce qui est accordé aux rôles dont il hérite. Les relations accordent une permission sur les éléments concernés (par exemple au créateur d'un enregistrement).

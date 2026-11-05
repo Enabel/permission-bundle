@@ -1,7 +1,9 @@
 matrix:
+    caption: Rechten toegekend aan elke rol
     # No longer rendered by the bundle template; kept for the templates overriding it.
     permission: Recht
     relations: Ook toegekend via
     granted: Toegekend
+    not_granted: Niet toegekend
     empty: Er zijn geen rechten gedeclareerd.
     inheritance: Een rol krijgt wat toegekend is aan de rollen die ze erft. Relaties kennen een recht toe op de betrokken elementen (bijvoorbeeld aan de maker van een record).
