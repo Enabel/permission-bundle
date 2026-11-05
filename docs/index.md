@@ -180,11 +180,15 @@ final class PermissionsController extends AbstractController
 ```twig
 {% include '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
 
-{# or, to label the permissions: #}
+{# or, to label the permissions and name the table after the page: #}
 {% embed '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
     {% block permission_label %}{{ ('permission.' ~ row.value) | trans }}{% endblock %}
+    {% block caption %}{{ 'admin.permissions.title' | trans }}{% endblock %}
 {% endembed %}
 ```
+
+For screen readers the table carries a visually hidden caption (`matrix.caption` by default), and
+every role cell says whether the role is granted, the empty ones included.
 
 The template uses Bootstrap classes and the `enabel_permission` translation domain (en, fr, nl).
 Relations are labelled with `relation.<name>` in that domain when the application translates

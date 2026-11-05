@@ -5,7 +5,8 @@
         {% include '@EnabelPermission/matrix.html.twig' with {matrix: matrix} %}
 
     `matrix` is the Enabel\Permission\Matrix\PermissionMatrix service. To label
-    the permissions, embed it and override `permission_label` (`row` is a MatrixRow).
+    the permissions, embed it and override `permission_label` (`row` is a MatrixRow);
+    to name the table for screen readers, override `caption`.
 -#}
 {% set roles = matrix.roles %}
 {% set domains = matrix.domains %}
@@ -14,6 +15,7 @@
 {% else %}
     <div class="table-responsive enabel-permission-matrix">
         <table class="table table-sm table-hover align-middle mb-0">
+            <caption class="visually-hidden">{% block caption %}{{ 'matrix.caption' | trans({}, 'enabel_permission') }}{% endblock %}</caption>
             {% for domain, rows in domains %}
                 <tbody data-domain="{{ domain }}">
                     <tr class="table-light">
@@ -35,6 +37,8 @@
                                     {%- if row.roles[role] -%}
                                         <span aria-hidden="true">&#10003;</span>
                                         <span class="visually-hidden">{{ 'matrix.granted' | trans({}, 'enabel_permission') }}</span>
+                                    {%- else -%}
+                                        <span class="visually-hidden">{{ 'matrix.not_granted' | trans({}, 'enabel_permission') }}</span>
                                     {%- endif -%}
                                 </td>
                             {% endfor %}

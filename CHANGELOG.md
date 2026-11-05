@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.2](https://github.com/Enabel/permission-bundle/tree/v1.0.2) (unreleased)
+
+[Full Changelog](https://github.com/Enabel/permission-bundle/compare/v1.0.1...v1.0.2)
+
+**Fixed bugs:**
+
+- The permission matrix was hard to use with a screen reader: the table had no accessible name and a role cell that is not granted was read empty. The table now opens with a visually hidden caption (`matrix.caption`, overridable through the `caption` block) and every role cell says "Granted" or "Not granted" (`matrix.not_granted`, en, fr, nl).
+
 ## [v1.0.1](https://github.com/Enabel/permission-bundle/tree/v1.0.1) (2026-10-30)
 
 [Full Changelog](https://github.com/Enabel/permission-bundle/compare/v1.0.0...v1.0.1)
